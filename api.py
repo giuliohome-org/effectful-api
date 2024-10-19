@@ -1,13 +1,16 @@
 # Define intents (representing each HTTP action)
+from dataclasses import dataclass
+
+# Define the intents using data classes
+@dataclass
 class CreateRequest:
-    def __init__(self, payload):
-        self.payload = payload
+    payload: dict
 
+@dataclass
 class UpdateRequest:
-    def __init__(self, request_id, payload):
-        self.request_id = request_id
-        self.payload = payload
+    request_id: str
+    payload: dict
 
+@dataclass
 class CloseRequest:
-    def __init__(self, request_id):
-        self.request_id = request_id
+    request_id: str
