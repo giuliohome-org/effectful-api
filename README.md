@@ -15,7 +15,6 @@ All the magic happens without talking to any servers—because why involve the r
 
 ## Prerequisites 📚
 
-- Python 3.8+ (For when Python 2 is too passé)
 - `effect` library (`pip install effect`) 
 
 ## How Does It Work? 🤔
@@ -40,12 +39,12 @@ Save it as `mock.py` and let the magic unfold:
 
 ```bash
 $ python main.py
-DEBUG:__main__:Mock: Creating request... {'name': 'New Request', 'details': 'Some details'}
-INFO:__main__:Updated effect with object id mock-request-id
-DEBUG:__main__:Mock: Updating request mock-request-id with payload: {'status': 'scheduled'}
-INFO:__main__:Closing mypayload {'status': 'scheduled'}
-DEBUG:__main__:Mock: Closing request mock-request-id
-INFO:__main__:Mock sequence completed with result: {'id': 'mock-request-id', 'status': 'closed'}
+DEBUG:observable-activity:Mock: Creating request... {'name': 'New Request', 'details': 'Some details'} with token <secret>
+INFO:observable-activity:Updated effect with object id mock-request-id
+DEBUG:observable-activity:Mock: Updating request mock-request-id with payload: {'status': 'scheduled'}
+INFO:observable-activity:Closing mypayload {'status': 'scheduled'}
+DEBUG:observable-activity:Mock: Closing request mock-request-id
+INFO:observable-activity:Mock sequence completed with result: {'id': 'mock-request-id', 'status': 'closed'}
 ```
 
 Or as we like to call it: **a job well done, with absolutely no jobs done.**
