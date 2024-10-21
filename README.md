@@ -39,11 +39,13 @@ All the magic happens without talking to any servers—because why involve the r
 Save it as `mock.py` and let the magic unfold:
 
 ```bash
-python mock.py
-Mock: Creating request...
-Mock: Updating request mock-request-id with payload: {'status': 'scheduled'}
-Mock: Closing request mock-request-id
-Mock sequence completed successfully: {'id': 'mock-request-id', 'status': 'closed'}
+$ python main.py
+DEBUG:__main__:Mock: Creating request... {'name': 'New Request', 'details': 'Some details'}
+INFO:__main__:Updated effect with object id mock-request-id
+DEBUG:__main__:Mock: Updating request mock-request-id with payload: {'status': 'scheduled'}
+INFO:__main__:Closing mypayload {'status': 'scheduled'}
+DEBUG:__main__:Mock: Closing request mock-request-id
+INFO:__main__:Mock sequence completed with result: {'id': 'mock-request-id', 'status': 'closed'}
 ```
 
 Or as we like to call it: **a job well done, with absolutely no jobs done.**

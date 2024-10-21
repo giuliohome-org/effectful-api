@@ -5,10 +5,9 @@ from logic import main_sequence
 from mock import getDispatcher
 
 logger = logging.getLogger(__name__)
-
+logging.basicConfig(level=logging.DEBUG)
 
 # Run the effect with the mock dispatcher
-logging.basicConfig(level=logging.DEBUG)
 try:
     mock_dispatcher = getDispatcher(logger)    
     result = sync_perform(mock_dispatcher, main_sequence(logger))
