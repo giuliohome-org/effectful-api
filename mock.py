@@ -3,11 +3,12 @@ from effect import Effect, sync_performer, TypeDispatcher, Error
 from logic import main_sequence
 from api import CreateRequest, UpdateRequest, CloseRequest
 
-
-def getDispatcher(logger: Logger):
+# higher-order function dispatcher
+def getDispatcher(logger: Logger, token: str):
     @sync_performer
     def mock_create_request_performer(dispatcher, intent):
-        logger.debug(f"Mock: Creating request... {intent.payload}")
+        logger.debug(f"Mock: Creating request... {intent.payload} with token {token}")
+        # use the auth token to call the api...
         return "mock-request-id"  # Return a fake object ID
 
     @sync_performer
