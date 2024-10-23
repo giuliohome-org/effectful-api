@@ -1,3 +1,4 @@
+import time
 from logging import Logger
 from effect import Effect, sync_performer, TypeDispatcher, Error
 from logic import main_sequence
@@ -8,12 +9,14 @@ def getDispatcher(logger: Logger, token: str):
     @sync_performer
     def mock_create_request_performer(dispatcher, intent):
         logger.debug(f"Mock: Creating request... {intent.payload} with token {token}")
+        time.sleep(1)
         # use the auth token to call the api...
         return "mock-request-id"  # Return a fake object ID
 
     @sync_performer
     def mock_update_request_performer(dispatcher, intent):
         logger.debug(f"Mock: Updating request {intent.request_id} with payload: {intent.payload}")
+        time.sleep(1)
         # raise Exception("error occurred")
         return {"id": intent.request_id, "mypayload": intent.payload}
 
