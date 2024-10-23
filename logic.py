@@ -3,7 +3,7 @@ from effect import Effect, sync_perform, Error
 from api import CreateRequest, UpdateRequest, CloseRequest
 
 
-# Define the same sequence of effects
+# Define the pure, effectful logic (inspired by Haskell's philosophy: the IO-like sequence is pure, without side effects)
 def main_sequence(log):
     # Create the object
     create_effect = Effect(CreateRequest(payload={"name": "New Request", "details": "Some details"}))
