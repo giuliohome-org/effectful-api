@@ -14,12 +14,23 @@ async def async_sleep_performer(dispatcher, intent):
 # Create a dispatcher to register our async performer
 dispatcher = TypeDispatcher({SleepIntent: async_sleep_performer})
 
-# Custom perform function to handle async performers
+# Recursive perform function to handle async effects with chaining
 async def perform_async(dispatcher, effect):
+    if not isinstance(effect, Effect):
+        return effect  # Base case: if it's a result, return it directly
+
+    # Dispatch the performer for the effect’s intent
     performer = dispatcher(effect.intent)
     if asyncio.iscoroutinefunction(performer):
-        # Call the async performer directly if it's a coroutine
-        return await performer(dispatcher, effect.intent)
+        # Call the async performer and get the result
+        result = await performer(dispatcher, effect.intent)
     else:
-        # Otherwise, call the performer synchronously
-        return performer(dispatcher, effect.intent)
+        # Call the performer synchronously if it's not async
+        result = performer(dispatcher, effect.intent)
+
+    # Check if there are any chained effects via `.on()`
+    next_effect = effect.on_success(result) if effect.success_callback else result
+    if isinstance(next_effect, Effect):
+        # Recursively perform the next effect
+        return await perform_async(dispatcher, next_effect)
+    return next_effect

@@ -24,6 +24,3 @@ def main_sequence(log):
 
     # Start the sequence: create -> update -> close
     return create_effect.on(success=update_step, error=handle_failure)
-
-
-
