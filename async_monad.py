@@ -16,30 +16,25 @@ dispatcher = TypeDispatcher({SleepIntent: async_sleep_performer})
 
 # Recursive perform function to handle async effects with chaining
 async def perform_async(dispatcher, effect):
-    # Log the current effect being processed
-    print(f"Processing effect: {effect}")
-    
-    # Ensure we're handling an Effect
+    print(f"Processing effect: {effect}")  # Logging for debugging
+    # Check if the effect is indeed an Effect instance
     if not isinstance(effect, Effect):
-        return effect  # If not an effect, return it directly
+        return effect  # If it's not an Effect, just return the result
 
-    # Dispatch the performer for the effect's intent
+    # Dispatch the effect's intent
     performer = dispatcher(effect.intent)
     
-    # Check if the performer is a coroutine
-    if asyncio.iscoroutinefunction(performer):
-        result = await performer(dispatcher, effect.intent)
-    else:
-        result = performer(dispatcher, effect.intent)
+    # Execute the performer, await if it's a coroutine
+    result = await (performer(dispatcher, effect.intent) if asyncio.iscoroutinefunction(performer) else performer(dispatcher, effect.intent))
 
-    # Check for next effects
-    next_effect = effect.on(success=lambda r: Effect(result), error=lambda e: Effect(Error(e)))
-    
-    # Log the processing flow
-    print(f"Performing next effect: {next_effect}")
-    
-    # Avoid infinite recursion: check if next_effect is indeed an Effect
-    if isinstance(next_effect, Effect):
+    # Determine next effect based on the result and call the corresponding handler
+    if isinstance(result, Effect):
+        next_effect = result.on(success=perform_async, error=handle_failure)
+        print(f"Next effect determined: {next_effect}")
         return await perform_async(dispatcher, next_effect)
 
     return result  # Return the final result if there are no further effects
+
+def handle_failure(error):
+    print(f"Operation failed: {error}")
+    return Effect(Error(error))  # Ensure it returns an Effect

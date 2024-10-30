@@ -3,7 +3,6 @@ from api import CreateRequest, UpdateRequest, CloseRequest
 
 # Define the pure, effectful logic (inspired by Haskell's philosophy: the IO-like sequence is pure, without side effects)
 def main_sequence(log):
-    # Create the object
     create_effect = Effect(CreateRequest(payload={"name": "New Request", "details": "Some details"}))
 
     def update_step(request_id):
@@ -13,13 +12,13 @@ def main_sequence(log):
 
     def close_step(updated_response):
         request_id = updated_response["id"]
-        log.info("Closing mypayload %s", updated_response["mypayload"])
+        log.info("Closing request %s", request_id)
         close_effect = Effect(CloseRequest(request_id))
-        return close_effect.on(error=handle_failure)
+        return close_effect.on(success=lambda _: Effect("Finished"), error=handle_failure)
 
     def handle_failure(error):
         log.info(f"Operation failed: {error}")
         return Effect(Error(error))  # Ensure it returns an Effect
 
-    # Start the sequence: create -> update -> close
     return create_effect.on(success=update_step, error=handle_failure)
+
