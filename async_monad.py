@@ -20,19 +20,19 @@ async def async_perform(dispatcher, effect):
     successes = []
     errors = []
     try:
-        perfresult = await performer(dispatcher, effect.intent)
-        successes.append(perfresult)
+        performer_result = await performer(dispatcher, effect.intent)
+        successes.append(performer_result)
     except Exception as e:  
         errors.append(e)
     if effect.callbacks:
-        callback_result = effect.callbacks[0][0](perfresult)
+        success_handler, error_handler = effect.callbacks[0]
+        callback_result = success_handler(performer_result) if successes else error_handler(errors[0])
         print(f"callback: {callback_result}")
         if isinstance(callback_result, Effect):
             print(f"callback is an effect: {callback_result}")
             return await async_perform(dispatcher, callback_result)
         else:
             print(f"callback is not an effect: {callback_result}")
-            await asyncio.sleep(1)
             return callback_result
     else:
         if successes:
