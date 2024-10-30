@@ -1,11 +1,4 @@
-import asyncio
 from effect import Effect
-
-async def async_task(future, result):
-    # Simulate some processing
-    await asyncio.sleep(1)  # This simulates a delay in processing
-    # Set the result of the future
-    future.set_result(result)
 
 class NotAsynchronousError(Exception):
     """Performing an effect did not immediately return a value."""
