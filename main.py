@@ -5,7 +5,7 @@ from effect import sync_perform
 from logic import main_sequence
 from mock import getDispatcher
 
-from async_monad import perform_async
+from async_monad import async_perform
 
 logger = logging.getLogger("observable-activity")
 token="<secret>"
@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.DEBUG)
 async def main():
     try:
         mock_dispatcher = getDispatcher(logger, token)    
-        result = await perform_async(mock_dispatcher, main_sequence(logger))
+        result = await async_perform(mock_dispatcher, main_sequence(logger))
         logger.info(f"Mock sequence completed with result: {result}")
     except Exception as e:
         logger.info(f"Failed to complete mock sequence: {e}")
