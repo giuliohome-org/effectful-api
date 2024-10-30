@@ -9,7 +9,6 @@ def main_sequence(log):
         print(f"Updating request with ID: {request_id}")
         update_effect = Effect(UpdateRequest(request_id, payload={"status": "scheduled"}))
         log.info("Updated effect with object id %s", request_id)
-        # Ensure you return a proper Effect here
         return update_effect.on(success=close_step, error=handle_failure)
 
     def close_step(updated_response):
@@ -21,6 +20,7 @@ def main_sequence(log):
 
     def handle_failure(error):
         log.info(f"Operation failed: {error}")
-        return Effect(Error(error))  # Ensure it returns an Effect
+        return Effect(Error(error))
 
     return create_effect.on(success=update_step, error=handle_failure)
+

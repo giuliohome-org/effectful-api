@@ -22,18 +22,20 @@ async def perform_async(dispatcher, effect):
 
     performer = dispatcher(effect.intent)
 
+    # Execute the performer
     result = await (performer(dispatcher, effect.intent) if asyncio.iscoroutinefunction(performer) else performer(dispatcher, effect.intent))
 
     # Debug output to check result
     print(f"Result of effect processing: {result}")  # Log the raw result
 
-    if hasattr(result, 'success'):
-        if result.success:
-            next_effect = effect.on(success=result.callbacks[0][0], error=handle_failure)
+    # Ensure that the result has the expected structure
+    if isinstance(result, dict) and "id" in result and "success" in result:
+        if result["success"]:
+            next_effect = effect.on(success=update_step(result["id"]), error=handle_failure)
             print(f"Next effect determined: {next_effect}")
             return await perform_async(dispatcher, next_effect)
         else:
-            return handle_failure(result.error)
+            return handle_failure("Failed to create request")
     else:
         print(f"Unexpected result format: {result}")
         return handle_failure("Unexpected result format")
