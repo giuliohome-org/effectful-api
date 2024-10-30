@@ -16,8 +16,7 @@ def main_sequence(log):
         request_id = updated_response["id"]
         log.info("Closing request %s", request_id)
         close_effect = Effect(CloseRequest(request_id))
-        close_effect.on(error=handle_failure)
-        return {"status": "completed", "id": request_id}
+        return close_effect.on(error=handle_failure)
 
     def handle_failure(error):
         log.info(f"Operation failed: {error}")
