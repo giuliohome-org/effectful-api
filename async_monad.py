@@ -28,9 +28,11 @@ async def perform_async(dispatcher, effect):
         # Call the performer synchronously if it's not async
         result = performer(dispatcher, effect.intent)
 
-    # Check if there are any chained effects via `.on()`
-    next_effect = effect.on_success(result) if effect.success_callback else result
+    # Handle success and error callbacks
+    next_effect = effect.on(success=lambda r: r, error=lambda e: e)
+
+    # If next_effect is an Effect, recursively perform it
     if isinstance(next_effect, Effect):
-        # Recursively perform the next effect
         return await perform_async(dispatcher, next_effect)
-    return next_effect
+    
+    return result  # Return the result if there are no further effects
