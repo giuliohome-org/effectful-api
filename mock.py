@@ -1,7 +1,6 @@
 import time
 from logging import Logger
-from effect import Effect, sync_performer, TypeDispatcher, Error
-from logic import main_sequence
+from effect import sync_performer, TypeDispatcher
 from api import CreateRequest, UpdateRequest, CloseRequest
 
 # higher-order function dispatcher

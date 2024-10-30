@@ -1,4 +1,4 @@
-from effect import Effect, sync_perform, Error
+from effect import Effect, Error
 from api import CreateRequest, UpdateRequest, CloseRequest
 
 
