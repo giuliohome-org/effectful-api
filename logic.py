@@ -9,8 +9,9 @@ def main_sequence(log):
         print(f"Updating request with ID: {request_id}")
         update_effect = Effect(UpdateRequest(request_id, payload={"status": "scheduled"}))
         log.info("Updated effect with object id %s", request_id)
+        # Ensure you return a proper Effect here
         return update_effect.on(success=close_step, error=handle_failure)
-    
+
     def close_step(updated_response):
         print(f"Closing request with response: {updated_response}")
         request_id = updated_response["id"]
