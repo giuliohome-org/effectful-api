@@ -16,28 +16,24 @@ dispatcher = TypeDispatcher({SleepIntent: async_sleep_performer})
 
 # Recursive perform function to handle async effects with chaining
 async def perform_async(dispatcher, effect):
-    print(f"Processing effect: {effect}")  # Log for debugging
+    print(f"Processing effect: {effect}")
+    
     if not isinstance(effect, Effect):
-        return effect  # If it's not an Effect, return as is
+        return effect  # Return directly if it's not an Effect
 
     performer = dispatcher(effect.intent)
 
     # Execute the performer
     result = await (performer(dispatcher, effect.intent) if asyncio.iscoroutinefunction(performer) else performer(dispatcher, effect.intent))
 
-    # Debug output to check result
-    print(f"Result of effect processing: {result}")  # Log the raw result
-
-    # Ensure that the result has the expected structure
+    # Check result structure
     if isinstance(result, dict) and "id" in result and "success" in result:
         if result["success"]:
-            next_effect = effect.on(success=update_step(result["id"]), error=handle_failure)
-            print(f"Next effect determined: {next_effect}")
-            return await perform_async(dispatcher, next_effect)
+            # Call the next step based on the result
+            return await perform_async(dispatcher, result["next_effect"])
         else:
             return handle_failure("Failed to create request")
     else:
-        print(f"Unexpected result format: {result}")
         return handle_failure("Unexpected result format")
 
 def handle_failure(error):
