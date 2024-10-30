@@ -19,7 +19,7 @@ def main_sequence(log):
 
     def handle_failure(error):
         log.info(f"Operation failed: {error}")
-        return Error(error)
+        return Effect(Error(error))  # Ensure it returns an Effect
 
     # Start the sequence: create -> update -> close
     return create_effect.on(success=update_step, error=handle_failure)
