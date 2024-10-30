@@ -29,7 +29,10 @@ async def perform_async(dispatcher, effect):
         result = performer(dispatcher, effect.intent)
 
     # Handle success and error callbacks
-    next_effect = effect.on(success=lambda r: r, error=lambda e: e)
+    next_effect = effect.on(
+        success=lambda r: r, 
+        error=lambda e: e
+    )
 
     # If next_effect is an Effect, recursively perform it
     if isinstance(next_effect, Effect):

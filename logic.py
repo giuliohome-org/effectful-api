@@ -1,7 +1,6 @@
 from effect import Effect, Error
 from api import CreateRequest, UpdateRequest, CloseRequest
 
-
 # Define the pure, effectful logic (inspired by Haskell's philosophy: the IO-like sequence is pure, without side effects)
 def main_sequence(log):
     # Create the object
