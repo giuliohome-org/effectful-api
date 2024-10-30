@@ -24,13 +24,6 @@ async def async_perform(dispatcher, effect):
                 if success_handler is None:
                     return successes[0]
                 callback_result = success_handler(successes[0])
-                print(f"callback: {callback_result}")
-                if isinstance(callback_result, Effect):
-                    print(f"callback is an effect: {callback_result}")
-                    return await async_perform(dispatcher, callback_result)
-                else:
-                    print(f"callback is not an effect: {callback_result}")
-                    return callback_result
             else:
                 return successes[0]
         elif errors:
@@ -39,13 +32,13 @@ async def async_perform(dispatcher, effect):
                 if error_handler is None:
                     raise errors[0]
                 callback_result = error_handler(errors[0])
-                print(f"callback: {callback_result}")
-                if isinstance(callback_result, Effect):
-                    print(f"callback is an effect: {callback_result}")
-                    return await async_perform(dispatcher, callback_result)
-                else:
-                    print(f"callback is not an effect: {callback_result}")
-                    return callback_result
             raise errors[0]
         else:
             raise NotAsynchronousError("Performing %r was not asynchronous!" % (effect,))
+        print(f"callback: {callback_result}")
+        if isinstance(callback_result, Effect):
+            print(f"callback is an effect: {callback_result}")
+            return await async_perform(dispatcher, callback_result)
+        else:
+            print(f"callback is not an effect: {callback_result}")
+            return callback_result
