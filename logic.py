@@ -6,11 +6,13 @@ def main_sequence(log):
     create_effect = Effect(CreateRequest(payload={"name": "New Request", "details": "Some details"}))
 
     def update_step(request_id):
+        print(f"Updating request with ID: {request_id}")
         update_effect = Effect(UpdateRequest(request_id, payload={"status": "scheduled"}))
         log.info("Updated effect with object id %s", request_id)
         return update_effect.on(success=close_step, error=handle_failure)
-
+    
     def close_step(updated_response):
+        print(f"Closing request with response: {updated_response}")
         request_id = updated_response["id"]
         log.info("Closing request %s", request_id)
         close_effect = Effect(CloseRequest(request_id))
@@ -21,4 +23,3 @@ def main_sequence(log):
         return Effect(Error(error))  # Ensure it returns an Effect
 
     return create_effect.on(success=update_step, error=handle_failure)
-
